@@ -207,10 +207,10 @@
 					
 					<div class="item-footer">
 						<div class="interact">
-							<div class="mui-btn" style="padding: 0;border-radius: 0;float: right;">
+							<div class="mui-btn" style="padding: 0;border-radius: 0;float: right;" @click='dakaihudong(index)'>
 								<i class="mui-icon mui-icon-more" id="openPopover"></i>
 							</div>
-							<div class="menu">
+							<div class="menu" v-if='friend.hudong'>
 								<a @click='zan(index)' class="menu-a">{{ friend.dianzan }}</a>
 								<a class="menu-a" @click='dakaipinglun(index)'>评论</a>
 							</div>
@@ -277,15 +277,16 @@
 		        				id: '',
 		        				to: '',
 		        			},
+		        			hudong: false,
 		        			pinglun: false,
 		        			dianzan: '点赞',
 		        			logo: 'images/999pic_5281c33cbc368.jpg',
 		        			user: 'abc',
-		        			content: '不是吧，今天居然要上课！😈',
-		        			images: ['images/1.jpg', 'images/2.jpg', 'images/3.jpg'],
+		        			content: '恭喜贺喜😈',
+		        			images: '',
 		        			url: {
 		        				image: 'images/cbd.jpg',
-		        				detail: '大润发购物广场11月7日（星期一大润发购物广场（星期一'
+		        				detail: '东软今天成立了新的分公司！'
 		        			},
 		        			time: '',
 		        			zan: '',
@@ -296,6 +297,35 @@
 		        				id: '',
 		        				to: '',
 		        			},
+		        			hudong: false,
+		        			pinglun: false,
+		        			dianzan: '点赞',
+		        			logo: 'images/999pic_5281c33cbc368.jpg',
+		        			user: 'abc',
+		        			content: '不是吧，今天居然要上课！😈',
+		        			images: ['images/1.jpg', 'images/1.jpg', 'images/1.jpg'],
+		        			url: '',
+		        			time: '',
+		        			zan: ['马云','马化腾'],
+	        				comments: [
+	        					{
+	        						from: '马云',
+	        						to: '',
+	        						content: '今晚吃什么？',
+	        					},
+	        					{
+	        						from: '马化腾',
+	        						to: '马云',
+	        						content: '吃牛扒吧!',
+	        					},
+	        				]
+		        		},
+		        		{
+		        			args: {
+		        				id: '',
+		        				to: '',
+		        			},
+		        			hudong: false,
 		        			pinglun: false,
 		        			dianzan: '点赞',
 		        			logo: 'images/999pic_5281c33cbc368.jpg',
@@ -322,6 +352,9 @@
 		        ]
 		    },
 		    methods: {
+		    		dakaihudong: function(id){
+		    			this.friends[id].hudong = ((this.friends[id].hudong == true)?false:true);
+		    		},
 		        zan: function (id) {
 		        		var name = '阿d'
 		        		if (this.friends[id].zan) {
@@ -340,11 +373,13 @@
 		        			this.friends[id].zan.push(name);
 		        			this.friends[id].dianzan = '取消'
 		        		}
+		        		this.friends[id].hudong = false;
 		        },
 		        dakaipinglun: function(id, to){
 		        		this.friends[id].args.id = id;
 		        		this.friends[id].args.to = to;
 		        		this.friends[id].pinglun = true;
+		        		this.friends[id].hudong = false;
 		        },
 		        pinglun: function(args) {
 		        		var id = args.id;
@@ -393,10 +428,18 @@
 		     console.log(friends);
 		     for(var i=0; i < friends.length; i++){
 		     	vm.friends.unshift(friends[i]);
-		     }
+		     	friends.splice(i,1);
+		     };
+		     plus.storage.setItem('friends', JSON.stringify(friends));
 		     //注意，加载完新数据后，必须执行如下代码，注意：若为ajax请求，则需将如下代码放置在处理完ajax响应数据之后
 		     mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
 		};
+		document.getElementById('app').addEventListener('click', function(){
+			for(var i=0;i<vm.friends.length;i++){
+				friends[i].hudong = false;
+				friends[i].pinglun = false;
+			}
+		});
 	</script>
 
 </html>
